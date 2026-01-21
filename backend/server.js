@@ -36,8 +36,17 @@ app.options("*", cors(corsOptions));
  
 app.use(express.json());
 
- 
-connectDB();
+// Connect lazily (serverless-safe). If env is missing, return clear 500.
+app.use(async (req, res, next) => {
+  try {
+    await connectDB();
+    next();
+  } catch (err) {
+    res.status(500).json({
+      message: err?.message || "Database connection failed",
+    });
+  }
+});
  
 app.use("/api/auth", authRoutes);
  
