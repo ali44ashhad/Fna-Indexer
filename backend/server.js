@@ -32,7 +32,11 @@ app.get("/", (req, res) => {
   res.json({ status: "Backend running 🚀" });
 });
 
-const PORT = process.env.PORT || 5005;
-app.listen(PORT, () =>
-  console.log(`Server running on port ${PORT}`)
-);
+// For local dev we listen on a port.
+// On Vercel, this file is imported by a serverless function (no app.listen).
+if (process.env.VERCEL !== "1") {
+  const PORT = process.env.PORT || 5005;
+  app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+}
+
+export default app;
