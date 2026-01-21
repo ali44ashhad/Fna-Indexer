@@ -6,9 +6,24 @@ import authRoutes from "./routes/auth.routes.js";
 
 const app = express();
 
+const allowedOrigins = ["https://fna-indexer.vercel.app"];
+
 connectDB();
 
-app.use(cors());
+app.use(
+  cors({
+    origin: (origin, callback) => {
+      // Allow requests with no origin (like mobile apps or curl) or from our frontend
+      if (!origin || allowedOrigins.includes(origin)) {
+        return callback(null, true);
+      }
+      return callback(new Error("Not allowed by CORS"));
+    },
+    methods: ["GET", "POST", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+  })
+);
+app.options("*", cors());
 app.use(express.json());
 
 app.use("/api/auth", authRoutes);
