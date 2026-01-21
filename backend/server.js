@@ -5,38 +5,50 @@ import connectDB from "./config/db.js";
 import authRoutes from "./routes/auth.routes.js";
 
 const app = express();
-
-const allowedOrigins = ["https://fna-indexer.vercel.app"];
-
-connectDB();
-
+ 
+const allowedOrigins = [
+  "https://fna-indexer.vercel.app",
+  "http://localhost:5173",
+];
+ 
 app.use(
   cors({
-    origin: (origin, callback) => {
-      // Allow requests with no origin (like mobile apps or curl) or from our frontend
-      if (!origin || allowedOrigins.includes(origin)) {
+    origin: (origin, callback) => { 
+      if (!origin) {
         return callback(null, true);
       }
-      return callback(new Error("Not allowed by CORS"));
+ 
+      if (allowedOrigins.includes(origin)) {
+        return callback(null, true);
+      }
+ 
+      return callback(null, false);
     },
-    methods: ["GET", "POST", "OPTIONS"],
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
+    credentials: false, // set true ONLY if using cookies
   })
 );
+ 
 app.options("*", cors());
+
+ 
 app.use(express.json());
 
+ 
+connectDB();
+ 
 app.use("/api/auth", authRoutes);
-
+ 
 app.get("/", (req, res) => {
   res.json({ status: "Backend running 🚀" });
 });
-
-// For local dev we listen on a port.
-// On Vercel, this file is imported by a serverless function (no app.listen).
+ 
 if (process.env.VERCEL !== "1") {
   const PORT = process.env.PORT || 5005;
-  app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+  app.listen(PORT, () =>
+    console.log(`Server running on port ${PORT}`)
+  );
 }
 
 export default app;
