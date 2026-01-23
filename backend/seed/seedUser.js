@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 import bcrypt from "bcryptjs";
 import "dotenv/config";
-import User from "../models/user.js";
+import User from "../models/User.js";
 
 const seedUser = async () => {
   try {
