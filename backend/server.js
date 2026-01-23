@@ -5,32 +5,18 @@ import connectDB from "./config/db.js";
 import authRoutes from "./routes/auth.routes.js";
 
 const app = express();
- 
-const allowedOrigins = [
-  // Deployed frontend (Origin header never includes a trailing slash)
-  "https://fna-indexer.vercel.app",
-  // Local Vite dev
-  "http://localhost:5173",
-  "http://localhost:5174",
-  "http://localhost:5175",
-];
 
+// Allow ALL origins - koi bhi domain access kar sakta hai
 const corsOptions = {
-  origin: (origin, callback) => {
-    // Allow requests with no origin (curl, server-to-server, etc.)
-    if (!origin) return callback(null, true);
-    if (allowedOrigins.includes(origin)) return callback(null, true);
-    // Reject disallowed origins (no CORS headers will be returned)
-    return callback(new Error("Not allowed by CORS"));
-  },
+  origin: true, // Allow all origins
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"],
-  credentials: false, // set true ONLY if using cookies
+  credentials: false,
 };
- 
+
 app.use(cors(corsOptions));
- 
-// IMPORTANT: preflight must use the same options, otherwise it may omit headers
+
+// IMPORTANT: preflight must use the same options
 app.options("*", cors(corsOptions));
 
  
