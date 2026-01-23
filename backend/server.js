@@ -6,7 +6,7 @@ import authRoutes from "./routes/auth.routes.js";
 
 const app = express();
 
-// Allow ALL origins - koi bhi domain access kar sakta hai
+// Allow ALL origins - any domain can access
 const corsOptions = {
   origin: "*", // Explicitly allow all origins
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
@@ -21,7 +21,6 @@ app.use(cors(corsOptions));
 // IMPORTANT: preflight must use the same options
 app.options("*", cors(corsOptions));
 
- 
 app.use(express.json());
 
 // Connect lazily (serverless-safe). If env is missing, return clear 500.
