@@ -8,10 +8,12 @@ const app = express();
 
 // Allow ALL origins - koi bhi domain access kar sakta hai
 const corsOptions = {
-  origin: true, // Allow all origins
+  origin: "*", // Explicitly allow all origins
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"],
   credentials: false,
+  preflightContinue: false,
+  optionsSuccessStatus: 200,
 };
 
 app.use(cors(corsOptions));
